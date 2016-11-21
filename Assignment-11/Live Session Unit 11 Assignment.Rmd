@@ -1,0 +1,82 @@
+---
+title: "Live Session Unit 11 Assignment"
+author: "Chris Irwin"
+date: "11/16/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(fpp)
+```
+
+###I was assigned the hSales data set, which is included in the FPP package from r
+
+####Question A
+```{r}
+#create new data frame
+sales <- hsales
+	
+#plot hsales data
+plot(hsales)
+```
+
+#####Overall you can see that there is a seasonal trend that creates high and lows at what looks to be similar intervals
+
+
+####Question B
+#####Create Classical Decomposition
+```{r}
+#Get the classic decomposition
+fitClassic <- decompose(sales)
+
+#Plot data 
+plot(sales, col="dark gray") + lines(fitClassic$trend, col = "red")
+```
+
+####Question C
+#####Yes, if you overlay the classic trend you will see that overall it is a very poor fit to the data. 
+
+####Question D
+#####Create Seasonal Adjustment
+```{r}
+#need to see what the seasonal adjustment looks like
+	fitSeason <- seasadj(fitClassic)
+
+	#Plot seasonal data 
+	plot(sales, col=" dark green") + lines(fitSeason, col = "red")
+```
+
+####Question E
+```{r}
+#create data frame for outlier update
+salesWOutlier <- hsales
+	
+#Update data frame with outlier 
+salesWOutlier[274] <- 500
+
+#Decompose outlier data
+fitClassicWOutlier <- decompose(salesWOutlier)
+
+#Seasonalize the Outlier data
+fitSeasonWOutlier <- seasadj(fitClassicWOutlier)
+
+#Plot seasonal data 
+plot(sales, col=" dark Blue") + lines(fitSeasonWOutlier, col = "red")
+```
+#####The Outlier creates a large spike in the data and then quickly comes back to the model over all. 
+
+####Question F
+#####Overall where ever you add the value there will be a large spike, but it looks to regain its fit relatively quickly
+#####this would leave me to believe it has little effect, especially when it is used in a seasonality model.
+
+####Question G
+```{r}
+#Create STL Decomp data
+fitSTL <- stl(sales, s.window = 5)
+
+#Plot STL trend line vs Sales
+plot(sales, col="dark grey") + lines(fitSTL$time.series[,2], col = "red")
+```
+
+
+
